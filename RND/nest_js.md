@@ -35,6 +35,14 @@ nest g co users
 nest g s users
 ```
 
+- cors 설정: nest 프로젝트 main.ts에서
+
+```ts
+app.enableCors();
+```
+
+추가
+
 ### 실행
 
 - 기본 실행:
@@ -47,4 +55,10 @@ npm run start
 
 ```bash
 npm run start:dev
+```
+
+mysql typeorm 설치
+
+```bash
+npm i --save mysql typeorm @nestjs/typeorm
 ```
