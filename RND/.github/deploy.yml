@@ -1,0 +1,5 @@
+name: client
+on:
+  push:
+    branches:
+      - main
