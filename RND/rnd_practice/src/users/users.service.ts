@@ -15,8 +15,6 @@ export class UsersService {
 
     if (!user) {
       throw new NotFoundException('아이디를 찾을 수 없습니다');
-      // Custom Exception =>
-      // NotFoundException => nest에서 error 보낼때 쓰는 코드
     } else if (user.password !== password) {
       throw new NotFoundException('비밀번호가 일치하지 않습니다');
     }
@@ -24,12 +22,30 @@ export class UsersService {
   };
 
   create = (user: Omit<User, 'id'>): User => {
-    const newUser = {
-      id: this.idCounter++,
-      ...user,
-    };
-    this.users.push(newUser);
-    return newUser;
+    const idIndex = this.users.findIndex(
+      (item) => item.user_id === user.user_id,
+    );
+    const nickIndex = this.users.findIndex(
+      (item) => item.nickname === user.nickname,
+    );
+    const phoneIndex = this.users.findIndex(
+      (item) => item.phone_num === user.phone_num,
+    );
+
+    if (idIndex !== -1) {
+      throw new NotFoundException('이미 있는 아이디입니다');
+    } else if (nickIndex !== -1) {
+      throw new NotFoundException('이미 있는 닉네임입니다');
+    } else if (phoneIndex !== -1) {
+      throw new NotFoundException('이미 있는 휴대폰입니다');
+    } else {
+      const newUser = {
+        id: this.idCounter++,
+        ...user,
+      };
+      this.users.push(newUser);
+      return newUser;
+    }
   };
 
   remove = (id: number): void => {

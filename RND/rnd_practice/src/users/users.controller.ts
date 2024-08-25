@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './user.entity';
 
@@ -14,12 +6,12 @@ import { User } from './user.entity';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
+  @Post('regist')
   create(@Body() user: Omit<User, 'id'>): User {
     return this.usersService.create(user);
   }
 
-  @Get()
+  @Post()
   findOne(
     @Body('user_id') user_id: string,
     @Body('password') password: string,
