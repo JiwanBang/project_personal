@@ -79,9 +79,8 @@ import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 
 @Injectable()
-export class TypeOrmConfigService implements
-constructor(private readonly configService: ConfigService){}
-TypeOrmOptionsFactory {
+export class TypeOrmConfigService implements TypeOrmOptionsFactory {
+  constructor(private readonly configService: ConfigService) {}
   createTypeOrmOptions(): TypeOrmModuleOptions {
     return {
       type: 'mysql',
@@ -89,12 +88,14 @@ TypeOrmOptionsFactory {
       port: this.configService.get<number>('DATABASE_PORT'),
       username: this.configService.get<string>('DATABASE_USERNAME'),
       password: this.configService.get<string>('DATABASE_PASSWORD'),
-      database: this.configService.get<string>('typeorm_test'),
+      database: this.configService.get<string>('DATABASE_NAME'),
       entities: [],
       synchronize: true,
+      // 배포 시 synchronize는 false
     };
   }
 }
+
 ```
 
 - app.module.ts의 import에 내용 추가
