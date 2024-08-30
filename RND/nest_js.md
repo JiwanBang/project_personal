@@ -17,6 +17,14 @@ nest new "프로젝트명"
 npm
 ```
 
+- nest는 프로젝트 생성할때마다 .git이 같이 생성되니 지워주기!
+
+-response로 CRUD 패턴 자동생성 가능!
+
+```bash
+nest g res 모듈명
+```
+
 - 유저 모듈 생성
 
 ```bash
@@ -161,7 +169,7 @@ export class User {
   imports: [TypeOrmModule.forFeature([User])],
 ```
 
-- 데이터베이스 관련은 repository를 새로 만들어서 저장하는 것이 좋음
+- 데이터베이스 관련은 repository를 새로 만들어서 의존성 주입
 
 ### 관계 맺기
 
@@ -180,3 +188,27 @@ export class User {
   @ManyToOne((type) => User, (user) => user.id)
   writer: User;
 ```
+
+### DTO
+
+- Data Transfer Object, 프로세스 간 데이터를 전달하는 객체
+- 클라이언트와 서버가 데이터를 주고받을 때 사용하는 객체
+
+### pipe
+
+- @Injectable() 데코레이터로 주석이 달린 클래스
+  data-transformation과 data validation을 위해 사용
+
+```bash
+npm i class-validator
+npm i class-transformer
+```
+
+- data validator: 데이터 유효성 체크. 입력한 데이터를 평가하고, 유효한 경우 그대로 전달. 유효하지 않다면 예외를 발생시킨다.
+- data transformer: 입력 데이터를 원하는 형식으로 변환하는 것.
+  ex: string "7" => integer 7
+
+### DI(Dependency Injection)
+
+- findall, findone, create, update, delete... 등등은 인자, 조건만 다르고 사용하는 함수는 매번 동일 => 굳이 매번 새로 쓸 필요가 없으므로, 해당 함수들을 미리 만들어 두고 사용할 때마다 의존성 주입으로 사용
+- 보통 @injectable 데코레이터를 통해 공급자(prodiver)를 정함
