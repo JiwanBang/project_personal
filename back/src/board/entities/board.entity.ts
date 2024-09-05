@@ -1,4 +1,4 @@
-import { User } from 'src/user/user.entity';
+import { User } from '../../user/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -8,16 +8,17 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Category } from './category.entity';
 
 @Entity()
 export class Board {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ length: 100 })
   title: string;
 
-  @Column()
+  @Column({ length: 1000 })
   content: string;
 
   @CreateDateColumn()
@@ -31,4 +32,7 @@ export class Board {
 
   @ManyToOne((type) => User, (user) => user.id)
   writer: User;
+
+  @ManyToOne((type) => Category, (category) => category.id)
+  boardCate: Category;
 }

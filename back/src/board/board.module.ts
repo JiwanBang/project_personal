@@ -6,7 +6,6 @@ import { Board } from './entities/board.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Board])],
-
   controllers: [BoardController],
   providers: [BoardService],
 })

@@ -1,4 +1,4 @@
-import { Board } from 'src/board/entities/board.entity';
+import { Board } from '../board/entities/board.entity';
 import {
   Column,
   CreateDateColumn,
@@ -6,10 +6,12 @@ import {
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
+@Unique(['user_id', 'phone_num', 'nickname'])
 export class User {
   @PrimaryGeneratedColumn()
   id: number;

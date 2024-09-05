@@ -13,7 +13,10 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       username: this.configService.get<string>('DATABASE_USERNAME'),
       password: this.configService.get<string>('DATABASE_PASSWORD'),
       database: this.configService.get<string>('DATABASE_NAME'),
-      entities: [],
+      entities: [__dirname + '/../**/*.entity.{js,ts}'],
+      migrationsRun: false,
+      migrations: [__dirname + '/**/migrations/*.{js, ts}'],
+      migrationsTableName: 'migrations',
       synchronize: true,
       // 배포 시 synchronize는 false
     };

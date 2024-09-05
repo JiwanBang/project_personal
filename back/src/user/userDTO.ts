@@ -7,6 +7,7 @@ export namespace UserDTO {
   }
 
   export class login {
+    id: number;
     user_id: string;
     password: string;
   }

@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Req, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { UserDTO } from './userDTO';
-
+import * as bcrypt from 'bcryptjs';
+import { Request } from 'express';
 @Injectable()
 export class UserService {
   constructor(
@@ -12,8 +13,20 @@ export class UserService {
   ) {}
 
   async create_user(userDTO: UserDTO.registDTO) {
-    const user = await this.userRepository.create(userDTO);
-    return await this.userRepository.save(user);
+    const { user_id, nickname, password, phone_num } = userDTO;
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const user = await this.userRepository.create({
+      ...userDTO,
+      password: hashedPassword,
+    });
+
+    try {
+      await this.userRepository.save(user);
+    } catch (error) {
+      throw new UnauthorizedException('regist failed');
+    }
   }
 
   async find_userId(user_id: string) {
@@ -31,6 +44,19 @@ export class UserService {
     return await this.userRepository.findOne({
       where: { phone_num },
     });
+  }
+
+  async login(userDTO: UserDTO.login, req: Request) {
+    const { id, user_id, password } = userDTO;
+    const user = await this.userRepository.findOneBy({ user_id });
+    if (user && (await bcrypt.compare(password, user.password))) {
+      console.log(user.id);
+      req.session;
+      req.session.user = user.id;
+      return 'login success';
+    } else {
+      throw new UnauthorizedException('login failed');
+    }
   }
 
   async logout() {}
