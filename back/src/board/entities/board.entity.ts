@@ -4,6 +4,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -31,8 +32,10 @@ export class Board {
   deletedAt: Date;
 
   @ManyToOne((type) => User, (user) => user.id)
+  @JoinColumn()
   writer: User;
 
   @ManyToOne((type) => Category, (category) => category.id)
+  @JoinColumn()
   boardCate: Category;
 }

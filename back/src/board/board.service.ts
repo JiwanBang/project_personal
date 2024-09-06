@@ -3,6 +3,8 @@ import { boardDTO } from './boardDTO';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Board } from './entities/board.entity';
 import { Repository } from 'typeorm';
+import { User } from '../user/user.entity';
+import { Category } from './entities/category.entity';
 
 @Injectable()
 export class BoardService {
@@ -15,6 +17,7 @@ export class BoardService {
     const write = await this.boardRepository.create(board);
     try {
       await this.boardRepository.save(write);
+      return { message: 'upload complete' };
     } catch (error) {
       throw new UnauthorizedException('posting failed');
     }
@@ -24,19 +27,49 @@ export class BoardService {
     return await this.boardRepository.find();
   }
 
-  async findBoard(boardCate: number) {
-    return await this.boardRepository.find({ relations: ['boardCate'] });
+  async findBoard(paramId: number) {
+    console.log(paramId);
+    const category = await this.boardRepository.find({
+      relations: ['boardCate'],
+      where: { boardCate: { id: paramId } },
+    });
+    if (!category) throw new UnauthorizedException('fail load Board');
+    return category;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} board`;
+  async findWriter(paramId: number) {
+    const USER = await this.boardRepository.find({
+      relations: ['writer'],
+      where: { writer: { id: paramId } },
+    });
+    if (!USER) throw new UnauthorizedException('fail load Post list');
+    return USER;
   }
 
-  update(id: number, board: Board) {
-    return `This action updates a #${id} board`;
+  async findOne(id: number) {
+    const findOne = await this.boardRepository.find({ where: { id: id } });
+    if (!findOne) throw new UnauthorizedException('fail find post');
+    return findOne;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} board`;
+  async update(id: number, board: Board) {
+    const post = await this.boardRepository.findOne({ where: { id: id } });
+    const newPost = { ...post, ...board };
+    try {
+      await this.boardRepository.save(newPost);
+      return { message: 'Upload complete' };
+    } catch (error) {
+      throw new UnauthorizedException('Update failed');
+    }
+  }
+
+  async remove(id: number) {
+    const post = await this.boardRepository.findOne({ where: { id: id } });
+    try {
+      await this.boardRepository.softDelete(id);
+      return { message: 'Delete complete' };
+    } catch (error) {
+      throw new UnauthorizedException('Delete failed');
+    }
   }
 }

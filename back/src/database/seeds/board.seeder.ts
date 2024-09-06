@@ -10,12 +10,24 @@ export default class BoardSeeder {
     const repository = dataSource.getRepository(Board);
     const boardFactory = factoryManager.get(Board);
 
-    const category = new Category();
-    const user = new User();
-    category.id = 1;
-    user.id = 1;
+    const userRepo = dataSource.getRepository(User);
+    const cateRepo = dataSource.getRepository(Category);
 
-    const post = await boardFactory.make({ writer: user, boardCate: category });
-    await boardFactory.saveMany(10, post);
+    const UserData = await userRepo.find();
+    const cateData = await cateRepo.find();
+    console.log(UserData);
+    console.log(cateData);
+    if (UserData && cateData)
+      for (let i = 1; i < 11; i++) {
+        const category = new Category();
+        const user = new User();
+        category.id = cateData[i].id;
+        user.id = UserData[i].id;
+        const post = await boardFactory.make({
+          writer: user,
+          boardCate: category,
+        });
+        await boardFactory.save(post);
+      }
   }
 }
