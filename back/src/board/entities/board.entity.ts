@@ -1,4 +1,6 @@
 import { User } from '../../user/user.entity';
+import { Comment } from '../../comment/comment.entity';
+import { Pictures } from '../../pictures/pictues.entity';
 import {
   Column,
   CreateDateColumn,
@@ -6,10 +8,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Category } from './category.entity';
+import { Category } from '../../category/category.entity';
 
 @Entity()
 export class Board {
@@ -38,4 +41,10 @@ export class Board {
   @ManyToOne((type) => Category, (category) => category.id)
   @JoinColumn()
   boardCate: Category;
+
+  @OneToMany(() => Pictures, (pictures) => pictures.post)
+  post: Pictures[];
+
+  @OneToMany(() => Comment, (comment) => comment.board)
+  board: Comment[];
 }

@@ -1,16 +1,16 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { boardDTO } from './boardDTO';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Board } from './entities/board.entity';
 import { Repository } from 'typeorm';
-import { User } from '../user/user.entity';
-import { Category } from './entities/category.entity';
+import { Category } from '../category/category.entity';
 
 @Injectable()
 export class BoardService {
   constructor(
     @InjectRepository(Board)
     private boardRepository: Repository<Board>,
+    @InjectRepository(Category)
+    private cateRepository: Repository<Category>,
   ) {}
 
   async create_board(board: Board) {
@@ -24,13 +24,20 @@ export class BoardService {
   }
 
   async findAll() {
-    return await this.boardRepository.find();
+    return await this.boardRepository.find({
+      relations: ['boardCate'],
+      where: { deletedAt: null },
+      take: 10,
+      order: {
+        createdAt: 'desc',
+      },
+    });
   }
 
   async findBoard(paramId: number) {
     console.log(paramId);
     const category = await this.boardRepository.find({
-      relations: ['boardCate'],
+      relations: ['boardCate', 'writer'],
       where: { boardCate: { id: paramId } },
     });
     if (!category) throw new UnauthorizedException('fail load Board');
@@ -47,7 +54,10 @@ export class BoardService {
   }
 
   async findOne(id: number) {
-    const findOne = await this.boardRepository.find({ where: { id: id } });
+    const findOne = await this.boardRepository.find({
+      relations: ['writer', 'boardCate'],
+      where: { id: id },
+    });
     if (!findOne) throw new UnauthorizedException('fail find post');
     return findOne;
   }

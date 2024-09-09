@@ -1,4 +1,9 @@
-import { Injectable, Req, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  Req,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
@@ -53,11 +58,19 @@ export class UserService {
       console.log(user.id);
       req.session;
       req.session.user = user.id;
-      return 'login success';
+      return { message: 'login success' };
     } else {
-      throw new UnauthorizedException('login failed');
+      throw new HttpException('failed to login', 299);
     }
   }
 
   async logout() {}
+
+  async logCheck(req: Request) {
+    if (!req.session) {
+      throw new HttpException('not logined', 218);
+    } else if (req.session) {
+      return { id: req.session.user };
+    }
+  }
 }

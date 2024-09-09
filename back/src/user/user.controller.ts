@@ -3,6 +3,8 @@ import {
   ConflictException,
   Controller,
   Get,
+  HttpCode,
+  HttpException,
   Post,
   Req,
 } from '@nestjs/common';
@@ -22,13 +24,13 @@ export class UserController {
     const dup_phoneNum = await this.userService.find_phoneNum(phone_num);
 
     if (dup_id) {
-      throw new ConflictException('이미 사용중인 아이디입니다');
+      throw new HttpException('이미 사용중인 아이디입니다', 298);
     }
     if (dup_nick) {
-      throw new ConflictException('이미 사용중인 닉네임입니다');
+      throw new HttpException('이미 사용중인 닉네임입니다', 296);
     }
     if (dup_phoneNum) {
-      throw new ConflictException('이미 사용중인 휴대폰 번호입니다');
+      throw new HttpException('이미 사용중인 번호입니다', 297);
     }
     const createUser = await this.userService.create_user(userDTO);
 
@@ -41,7 +43,12 @@ export class UserController {
   }
 
   @Get()
-  async logout(@Req() request: Request) {
-    request.session.destroy;
+  async logout(@Req() req: Request) {
+    return this.userService.logout(req);
+  }
+
+  @Get('/logCheck')
+  async logCheck(@Req() req: Request) {
+    return this.userService.logCheck(req);
   }
 }

@@ -3,7 +3,7 @@ import { config } from 'dotenv';
 import { DataSource } from 'typeorm';
 import { Board } from './board/entities/board.entity';
 import { User } from './user/user.entity';
-import { Category } from './board/entities/category.entity';
+import { Category } from './category/category.entity';
 
 config();
 

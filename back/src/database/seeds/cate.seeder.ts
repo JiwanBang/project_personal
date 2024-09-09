@@ -1,4 +1,4 @@
-import { Category } from '../../board/entities/category.entity';
+import { Category } from '../../category/category.entity';
 import { DataSource } from 'typeorm';
 import { SeederFactoryManager } from 'typeorm-extension';
 

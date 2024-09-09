@@ -1,4 +1,5 @@
 import { Board } from '../board/entities/board.entity';
+import { Comment } from '../comment/comment.entity';
 import {
   Column,
   CreateDateColumn,
@@ -42,4 +43,7 @@ export class User {
 
   @OneToMany(() => Board, (board) => board.writer)
   writer: Board[];
+
+  @OneToMany(() => Comment, (comment) => comment.commenter)
+  commenter: Comment[];
 }

@@ -17,7 +17,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       migrationsRun: false,
       migrations: [__dirname + '/**/migrations/*.{js, ts}'],
       migrationsTableName: 'migrations',
-      synchronize: true,
+      synchronize: false,
       // 배포 시 synchronize는 false
     };
   }

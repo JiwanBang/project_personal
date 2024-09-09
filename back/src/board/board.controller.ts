@@ -25,18 +25,18 @@ export class BoardController {
   }
 
   @Get(':id')
-  findOne(@Param('id') paramId: string) {
-    return this.boardService.findOne(+paramId);
+  findOne(@Param('id') id: string) {
+    return this.boardService.findOne(+id);
   }
 
   @Get('/cate/:id')
-  findBoard(@Param('id') id: string) {
-    return this.boardService.findBoard(+id);
+  findBoard(@Param('id') paramId: string) {
+    return this.boardService.findBoard(+paramId);
   }
 
   @Get('/writer/:id')
-  findWriter(@Param('id') id: string) {
-    return this.boardService.findWriter(+id);
+  findWriter(@Param('id') paramId: string) {
+    return this.boardService.findWriter(+paramId);
   }
 
   @Patch(':id')

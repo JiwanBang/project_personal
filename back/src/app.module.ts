@@ -6,7 +6,8 @@ import { BoardModule } from './board/board.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './config/typeorm.config.service';
-
+import { CommentModule } from './comment/comment.module';
+import { CategoryModule } from './category/category.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -16,6 +17,8 @@ import { TypeOrmConfigService } from './config/typeorm.config.service';
     }),
     UserModule,
     BoardModule,
+    CategoryModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
