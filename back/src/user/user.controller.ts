@@ -1,12 +1,11 @@
 import {
   Body,
-  ConflictException,
   Controller,
   Get,
-  HttpCode,
   HttpException,
   Post,
   Req,
+  Res,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDTO } from './userDTO';

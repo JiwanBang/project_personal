@@ -2,6 +2,7 @@ import icon from "../../icon/user-profile-icon-profile-avatar-user-icon-male-ico
 import searchIcon from "../../icon/search_icon.png";
 import { Link } from "react-router-dom";
 import HeaderCate from "./HeaderCate";
+import LoginElem from "./LoginElem";
 const Header = () => {
   return (
     <div>
@@ -11,11 +12,9 @@ const Header = () => {
           <Link to="/">
             <span className="text-[1.2rem]">와글와글 게시판</span>
           </Link>
-          <button>
-            <Link to="/login">
-              <img className="w-[25px] h-[25px]" src={icon} />
-            </Link>
-          </button>
+          <div>
+            <LoginElem></LoginElem>
+          </div>
         </div>
         <div className="h-[40px] items-center justify-center flex">
           <div className="w-[18rem] flex items-center justify-between rounded-[0.3rem] bg-white px-[1rem]">

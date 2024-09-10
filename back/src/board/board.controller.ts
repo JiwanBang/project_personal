@@ -6,17 +6,18 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
 } from '@nestjs/common';
 import { BoardService } from './board.service';
 import { Board } from './entities/board.entity';
-
+import { Request } from 'express';
 @Controller('board')
 export class BoardController {
   constructor(private readonly boardService: BoardService) {}
 
   @Post()
-  create(@Body() board: Board) {
-    return this.boardService.create_board(board);
+  create(@Body() board: Board, @Req() req: Request) {
+    return this.boardService.create_board(board, req);
   }
 
   @Get()

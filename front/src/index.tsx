@@ -5,6 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { RecoilRoot } from "recoil";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -19,11 +20,13 @@ const client = new QueryClient({
 });
 root.render(
   // <React.StrictMode>
-  <BrowserRouter>
-    <QueryClientProvider client={client}>
-      <App />
-    </QueryClientProvider>
-  </BrowserRouter>
+  <RecoilRoot>
+    <BrowserRouter>
+      <QueryClientProvider client={client}>
+        <App />
+      </QueryClientProvider>
+    </BrowserRouter>
+  </RecoilRoot>
 
   // </React.StrictMode>
 );

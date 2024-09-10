@@ -10,13 +10,13 @@ const Regist = () => {
   const navigate = useNavigate();
 
   const onSubmit = async () => {
-    if (userId == "") {
+    if (userId === "") {
       alert("아이디를 확인해주십시오");
-    } else if (password == "") {
+    } else if (password === "") {
       alert("비밀번호를 확인해주십시오");
-    } else if (nickname == "") {
+    } else if (nickname === "") {
       alert("닉네임을 확인해주십시오");
-    } else if (phone == "") {
+    } else if (phone === "") {
       alert("전화번호를 확인해주십시오");
     } else {
       const submit = await instance.post(
@@ -31,13 +31,13 @@ const Regist = () => {
       );
       console.log(submit);
 
-      if (submit.status == 298) {
+      if (submit.status === 298) {
         alert(submit.data.message);
-      } else if (submit.status == 297) {
+      } else if (submit.status === 297) {
         alert(submit.data.message);
-      } else if (submit.status == 296) {
+      } else if (submit.status === 296) {
         alert(submit.data.message);
-      } else if (submit.status == 201) {
+      } else if (submit.status === 201) {
         navigate("/regist/done");
       }
     }

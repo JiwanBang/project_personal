@@ -1,23 +1,45 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Board } from './entities/board.entity';
 import { Repository } from 'typeorm';
-import { Category } from '../category/category.entity';
+import { User } from '../user/user.entity';
+import { Request } from 'express';
 
 @Injectable()
 export class BoardService {
   constructor(
     @InjectRepository(Board)
     private boardRepository: Repository<Board>,
-    @InjectRepository(Category)
-    private cateRepository: Repository<Category>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {}
 
-  async create_board(board: Board) {
-    const write = await this.boardRepository.create(board);
+  async create_board(board: Board, req: Request) {
     try {
-      await this.boardRepository.save(write);
-      return { message: 'upload complete' };
+      const userId = req.session.user;
+      if (userId) {
+        const writer = await this.userRepository.findOne({
+          where: { id: userId },
+        });
+
+        if (!writer) {
+          throw new HttpException('작성자를 확인할 수 없습니다', 299);
+        } else {
+          const write = await this.boardRepository.create({
+            ...board,
+            writer: writer,
+          });
+          const newPost = await this.boardRepository.save(write);
+          console.log(newPost);
+          return { newPost, message: 'upload complete', status: 210 };
+        }
+      } else if (!userId) {
+        throw new HttpException('로그인이 필요합니다', 214);
+      }
     } catch (error) {
       throw new UnauthorizedException('posting failed');
     }

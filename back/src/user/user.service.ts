@@ -9,7 +9,7 @@ import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { UserDTO } from './userDTO';
 import * as bcrypt from 'bcryptjs';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 @Injectable()
 export class UserService {
   constructor(
@@ -64,13 +64,19 @@ export class UserService {
     }
   }
 
-  async logout() {}
+  async logout(req: Request) {
+    req.session.destroy(() => {});
+    return 'logout';
+  }
 
   async logCheck(req: Request) {
-    if (!req.session) {
+    if (req.session.user) {
+      const user = await this.userRepository.find({
+        where: { id: req.session.user },
+      });
+      return user;
+    } else {
       throw new HttpException('not logined', 218);
-    } else if (req.session) {
-      return { id: req.session.user };
     }
   }
 }

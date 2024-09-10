@@ -19,6 +19,7 @@ async function bootstrap() {
       secret: 'project',
       name: 'user',
       store: new Filestore({
+        retries: 1,
         reapInterval: 1000,
         path: './user_session',
       }),

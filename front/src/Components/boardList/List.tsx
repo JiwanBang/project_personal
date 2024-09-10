@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import instance from "../../lib/axios";
 import { useEffect, useState } from "react";
+import WriteBtn from "../WriteBtn/WriteBtn";
 
 export interface IList {
   id: number;
@@ -33,11 +34,8 @@ const List = () => {
           {board} 게시판
         </div>
         {postList.map((item, idx) => (
-          <Link to={`/post/${item.id}`}>
-            <li
-              key={idx}
-              className="border-b-[0.1rem] border-[#abc4d5] border-y-[grey]"
-            >
+          <Link to={`/post/${item.id}`} key={idx}>
+            <li className="border-b-[0.1rem] border-[#abc4d5] border-y-[grey]">
               <div className="flex gap-[1rem] px-3 pt-3">
                 <div className="text-grey">{item.id}.</div>
                 <div className="text-ellipsis overflow-hidden w-[16rem] h-[1.8rem]">
@@ -59,9 +57,7 @@ const List = () => {
         <button className="border-[0.1rem] border-[grey] text-[grey] rounded-[0.3rem] w-[2.5rem] h-[1.5rem]">
           다음
         </button>
-        <button className="border-[0.1rem] rounded-[0.3rem] w-[2.5rem] h-[1.5rem]">
-          글쓰기
-        </button>
+        <WriteBtn />
       </div>
     </div>
   );

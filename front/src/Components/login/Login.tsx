@@ -1,16 +1,20 @@
 import { ChangeEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import instance from "../../lib/axios";
+import { useRecoilState } from "recoil";
+import { userState } from "../../hooks/useContextLogin";
 
 const Login = () => {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
+  const [logined, setLogined] = useRecoilState(userState);
+
   const navigate = useNavigate();
 
   const onSubmit = async () => {
-    if (userId == "") {
+    if (userId === "") {
       alert("아이디를 입력해주십시오");
-    } else if (password == "") {
+    } else if (password === "") {
       alert("패스워드를 입력해주십시오");
     } else {
       const login = await instance.post(
@@ -19,10 +23,11 @@ const Login = () => {
         { withCredentials: true }
       );
       console.log(login);
-      if (login.status == 210) {
+      if (login.status === 210) {
         alert(login.data.message);
-      } else if (login.status == 201) {
+      } else if (login.status === 201) {
         alert(login.data.message);
+        setLogined(true);
         navigate("/");
       }
     }

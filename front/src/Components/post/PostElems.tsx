@@ -1,3 +1,4 @@
+import WriteBtn from "../WriteBtn/WriteBtn";
 import CommentElem from "./CommentElem";
 
 export interface IPost {
@@ -64,9 +65,7 @@ const PostElems = ({
         <button className="border-[0.1rem] border-[grey] text-[grey] rounded-[0.3rem] w-[2.5rem] h-[1.5rem]">
           다음
         </button>
-        <button className="border-[0.1rem] rounded-[0.3rem] w-[2.5rem] h-[1.5rem]">
-          글쓰기
-        </button>
+        <WriteBtn />
       </div>
     </div>
   );

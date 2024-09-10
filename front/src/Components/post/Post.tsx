@@ -8,7 +8,7 @@ export interface IProps {
   item: Post;
 }
 
-const Post = () => {
+const Posts = () => {
   const Params = useParams();
   console.log(Params.postID);
 
@@ -45,4 +45,4 @@ const Post = () => {
   );
 };
 
-export default Post;
+export default Posts;
