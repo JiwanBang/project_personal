@@ -13,7 +13,7 @@ jobs:
       mysql:
         image: mysql:latest
         ports:
-          - 3333:3306
+          - 3306:3306
         env:
           MYSQL_ROOT_PASSWORD: 1234qwer
           DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
@@ -115,7 +115,60 @@ jobs:
           ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
           mysql -u ${{ secrets.DATABASE_USERNAME }} -p${{ secrets.DATABASE_PASSWORD }} -e "SHOW DATABASES;"'
 
+  test_node:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+
+      - name: Add SSH key
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.EC2_KEY }}
+
+      - name: Ensure SSH directory exists
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+      - name: Add SSH known hosts
+        run: ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: test node
+        run: |
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
+          export NVM_DIR="$HOME/.nvm"
+          if [ -s "$NVM_DIR/nvm.sh" ]; then
+            . "$NVM_DIR/nvm.sh"
+          else 
+            echo "nvm.sh not found"
+            exit 1
+          fi
+
+          nvm -v
+          nvm use --lts
+          node -v
+          npm -v'
+
+  test_frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies of frontend
+        working-directory: ./front
+        run: npm i
+
   deploy_front:
+    needs:
+      - test_frontend
+      - test_node
     runs-on: ubuntu-latest
     steps:
       - name: checkout repository
@@ -152,3 +205,83 @@ jobs:
 
       - name: Restart Nginx
         run: ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} 'sudo service nginx restart'
+
+  deploy_backend:
+    needs:
+      - test_backend
+      - test_node
+      - test_mysql
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies of frontend
+        working-directory: ./back
+        run: npm i
+
+      - name: Run Test of frontend
+        working-directory: ./back
+        run: npm run build
+
+      - name: Add SSH key
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.EC2_KEY }}
+
+      - name: Ensure SSH directory exists
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+
+      - name: Add SSH known hosts
+        run: ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Copy Files to EC2
+        run: |
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
+            rm -rf /var/www/backend
+            mkdir /var/www/backend'
+          rsync -avz -e "ssh" ./back/build/ ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/var/www/backend
+          rsync -avz -e "ssh" ./back/package.json ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/var/www/backend/package.json
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
+            export NVM_DIR="$HOME/.nvm"
+            if [ -s "$NVM_DIR/nvm.sh" ]; then
+              . "$NVM_DIR/nvm.sh"
+            else 
+              echo "nvm.sh not found"
+              exit 1
+            fi
+
+            nvm use --lts
+            cd /var/www/backend
+            npm i --production
+            echo "PORT=${{ secrets.DATABASE_PORT }}" > .env
+            echo "">> .env
+            echo "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" >> .env
+            echo "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" >> .env
+            echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> .env
+            echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> .env'
+
+      - name: Start Server
+        run: |
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
+            export NVM_DIR="$HOME/.nvm"
+            if [ -s "$NVM_DIR/nvm.sh" ]; then
+              . "$NVM_DIR/nvm.sh"
+            else 
+              echo "nvm.sh not found"
+              exit 1
+            fi
+
+            nvm use --lts
+            
+            npm install -g pm2
+            pm2 stop all
+            pm2 start /var/www/backend/index.js --name backend'
