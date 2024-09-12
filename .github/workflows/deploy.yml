@@ -113,7 +113,7 @@ jobs:
       - name: test mysql user
         run: |
           ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
-          mysql -u ${{ secrets.DATABASE_USERNAME }} -p${{ secrets.DATABASE_PASSWORD }} -e "SHOW DATABASES;"'
+          mysql -u ${{ secrets.DATABASE_USERNAME }} -h ${{ secrets.DATABASE_HOST }} -p${{ secrets.DATABASE_PASSWORD }} -e "SHOW DATABASES;"'
 
   test_node:
     runs-on: ubuntu-latest
