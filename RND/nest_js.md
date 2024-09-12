@@ -307,3 +307,11 @@ faker.lorem.text(): 일반 텍스트 형식의 가짜 본문 생성
 faker.internet.userName(): 가짜 작성자 사용자명 생성
 faker.internet.email(): 가짜 작성자 이메일 생성
 ```
+
+## S3 in NestJS
+
+```bash
+npm install @aws-sdk/client-s3
+npm i multer-s3
+npm i uuid
+```

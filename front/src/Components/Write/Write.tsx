@@ -1,20 +1,35 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import instance from "../../lib/axios";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export interface ICate {
   id: number;
   category: string;
 }
+
 const Write = () => {
   const [categories, setCategories] = useState<ICate[]>([]);
   const [cateValue, setCateValue] = useState<number>(71);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [uploadImg, setUploadImg] = useState<FormData>();
 
   const nav = useNavigate();
   const back = () => {
     nav(-1);
+  };
+  const onChangeImg = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 5) {
+      return alert("이미지를 더 넣을 수 없습니다");
+    }
+    const formData = new FormData();
+    if (e.target.files) {
+      for (let i = 0; i < e.target.files.length; i++) {
+        formData.append("files", e.target.files.item(i) as File);
+      }
+      setUploadImg(formData);
+    }
   };
 
   const onChange = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -23,6 +38,9 @@ const Write = () => {
     console.log(value);
   };
 
+  useEffect(() => {
+    console.log(uploadImg);
+  }, [uploadImg]);
   useEffect(() => {
     console.log(cateValue);
   }, [cateValue]);
@@ -37,28 +55,45 @@ const Write = () => {
   }, []);
 
   const onSubmit = async () => {
-    try {
-      if (title === "") {
-        alert("제목을 작성해주십시오");
-      } else if (content === "") {
-        alert("내용을 작성해주십시오");
-      } else if (!cateValue) {
-        alert("카테고리를 작성해주십시오");
-      } else {
-        const submit = await instance.post(
-          "/board",
-          { boardCate: cateValue, title: title, content: content },
-          { withCredentials: true }
-        );
-        console.log(submit);
-        if (submit.status == 201) {
-          nav(`/post/${submit.data.id}`);
+    if (title === "") {
+      alert("제목을 작성해주십시오");
+    } else if (content === "") {
+      alert("내용을 작성해주십시오");
+    } else if (!cateValue) {
+      alert("카테고리를 작성해주십시오");
+    } else {
+      // const submit = async () => {
+      //   const post = await instance.post(
+      //     "/board",
+      //     { title: title, content: content, boardCate: cateValue },
+      //     {
+      //       withCredentials: true,
+      //     }
+      //   );
+      //   const imgUpload = await instance.post("/board/upload", uploadImg, {
+      //     headers: { "content-type": "multipart/form-data" },
+      //     withCredentials: true,
+      //   });
+
+      //   console.log(post);
+      //   console.log(imgUpload);
+      // };
+      // submit();
+      try {
+        if (uploadImg) {
+          console.log(uploadImg);
+
+          await instance.post("/board/upload", uploadImg, {
+            headers: { "content-type": "multipart/form-data" },
+            withCredentials: true,
+          });
         }
+      } catch (err) {
+        console.error(err);
       }
-    } catch (err) {
-      console.error(err);
     }
   };
+
   return (
     <div className="w-full h-full flex items-center justify-center flex-col gap-y-[0.5rem]">
       <div className="w-full absolute top-[25%] flex items-center flex-col gap-y-[0.5rem] border-[#abc4d5]">
@@ -86,8 +121,15 @@ const Write = () => {
           }}
           className="w-[80%] h-[10rem] border-[0.1rem] rounded-[0.3rem] border-[#abc4d5]"
         />
-        <input type="files border-[#abc4d5]" />
       </div>
+      <input
+        type="file"
+        multiple
+        accept="images/*"
+        className="border-[#abc4d5]"
+        onChange={onChangeImg}
+      />
+
       <div className="absolute bottom-0 w-full px-5 flex justify-between">
         <button onClick={back}>취소</button>
         <button onClick={onSubmit}>작성완료</button>

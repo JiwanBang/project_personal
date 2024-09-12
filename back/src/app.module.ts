@@ -8,6 +8,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './config/typeorm.config.service';
 import { CommentModule } from './comment/comment.module';
 import { CategoryModule } from './category/category.module';
+import { AwsModule } from './aws/aws.module';
+import { UtilsModule } from './utils/utils.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -19,6 +21,8 @@ import { CategoryModule } from './category/category.module';
     BoardModule,
     CategoryModule,
     CommentModule,
+    AwsModule,
+    UtilsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -8,6 +8,8 @@ import { Board } from './entities/board.entity';
 import { Repository } from 'typeorm';
 import { User } from '../user/user.entity';
 import { Request } from 'express';
+import { UtilsService } from '../utils/utils.service';
+import { AwsService } from '../aws/aws.service';
 
 @Injectable()
 export class BoardService {
@@ -16,6 +18,8 @@ export class BoardService {
     private boardRepository: Repository<Board>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private utilsService: UtilsService,
+    private awsService: AwsService,
   ) {}
 
   async create_board(board: Board, req: Request) {
@@ -103,5 +107,26 @@ export class BoardService {
     } catch (error) {
       throw new UnauthorizedException('Delete failed');
     }
+  }
+
+  async saveImage(files: Express.Multer.File[]) {
+    console.log('saveImage 진행중');
+    console.log('FormData:' + files);
+    const upload = Promise.all(files.map((file) => this.imageUpload(file)));
+    return upload;
+  }
+
+  async imageUpload(file: Express.Multer.File) {
+    console.log('imageUpload 진행중');
+    const imageName = this.utilsService.getUUID();
+    const ext = file.originalname.split('.').pop();
+
+    const imgUrl = await this.awsService.imageUploadToS3(
+      `${imageName}.${ext}`,
+      file,
+      ext,
+    );
+
+    return { imgUrl };
   }
 }
