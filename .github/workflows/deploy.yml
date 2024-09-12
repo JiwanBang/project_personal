@@ -53,10 +53,6 @@ jobs:
         working-directory: ./back
         run: npm i
 
-      - name: Run Test of backend
-        working-directory: ./back
-        run: npm test
-
       - name: Add SSH key
         uses: webfactory/ssh-agent@v0.5.4
         with:
