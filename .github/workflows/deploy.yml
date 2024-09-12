@@ -37,7 +37,7 @@ jobs:
           mysql -h "127.0.0.1" -P 3306 -u ${{ secrets.DATABASE_USERNAME }} -p${{ secrets.DATABASE_PASSWORD }} -e "SHOW DATABASES;"
 
       - name: set env
-        working-directory: ./mock-test
+        working-directory: ./back
         run: |
           echo DATABASE_HOST=${{ secrets.DATABASE_HOST }} > .env
           echo DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }} >> .env
@@ -51,11 +51,11 @@ jobs:
           echo AWS_S3_BUCKET_NAME=${{ AWS_S3_BUCKET_NAME }} >> .env
 
       - name: Install dependencies of backend
-        working-directory: ./project_board
+        working-directory: ./back
         run: npm i
 
       - name: Run Test of backend
-        working-directory: ./project_board
+        working-directory: ./back
         run: npm test
 
       - name: Add SSH key
