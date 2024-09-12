@@ -25,6 +25,7 @@ const List = () => {
       setBoard(callList.data[0].boardCate.category);
     };
     if (Params.listID) getList();
+    /* eslint-disable no-unused-vars */
   }, [Params.listID]);
 
   return (

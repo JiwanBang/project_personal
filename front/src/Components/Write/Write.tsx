@@ -51,6 +51,7 @@ const Write = () => {
     };
     callCate();
     console.log(categories);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSubmit = async () => {

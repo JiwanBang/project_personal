@@ -24,6 +24,7 @@ const Posts = () => {
         console.error(err);
       }
     })();
+    /* eslint-disable no-unused-vars */
   }, []);
 
   return (

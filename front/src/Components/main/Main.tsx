@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import instance from "../../lib/axios";
-import pic1 from "../../Pictures/1610707720776.jpg";
 import MainList, { IItems } from "./MainList";
 import Img from "./ImgElems/Img";
 
