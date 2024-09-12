@@ -34,7 +34,7 @@ jobs:
 
       - name: Run mySQL commands
         run: |
-          mysql -h ${{ secrets.DATABASE_HOST }} -P 3306 -u ${{ secrets.DATABASE_USERNAME }} -p${{ secrets.DATABASE_PASSWORD }} -e "SHOW DATABASES;"
+          mysql -P 3306 -u ${{ secrets.DATABASE_USERNAME }} -p${{ secrets.DATABASE_PASSWORD }} -e "SHOW DATABASES;"
 
       - name: set env
         working-directory: ./back
