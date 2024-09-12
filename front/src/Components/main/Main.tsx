@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import instance from "../../lib/axios";
 import pic1 from "../../Pictures/1610707720776.jpg";
 import MainList, { IItems } from "./MainList";
+import Img from "./ImgElems/Img";
 
 export type List = IItems[];
 export interface IProps {
@@ -47,13 +48,7 @@ const Main = () => {
           <h1 className="font-bold text-[1.2rem] px-3 py-[0.2rem]">
             사진 게시판
           </h1>
-          <li className="flex gap-[0.8rem] px-1 py-[0.1rem]">
-            <img src={pic1} className="w-[5rem] h-[5rem] rounded-[0.7rem]" />
-            <div>
-              <div>오늘 점심 메뉴 추천받아요</div>
-              <div>2024.09.07 16:56</div>
-            </div>
-          </li>
+          <Img />
         </ul>
       </div>
     </div>

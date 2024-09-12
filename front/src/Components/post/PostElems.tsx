@@ -8,6 +8,7 @@ export interface IPost {
   createdAt: string;
   writer: { id: number; nickname: string };
   boardCate: { id: number; category: string };
+  post: [{ id: number; img_url: string }];
   category: string;
   nickname: string;
 }
@@ -19,6 +20,7 @@ const PostElems = ({
   writer,
   boardCate,
   nickname,
+  post,
 }: IPost) => {
   let date = createdAt.slice(0, 10);
   let cate = boardCate.category.slice(0, 4);
@@ -44,6 +46,13 @@ const PostElems = ({
         </div>
       </div>
       <div className="py-[1rem] text-start px-[1rem] text-[0.8rem]">
+        {post.map((item) => (
+          <img
+            key={item.id}
+            src={item.img_url}
+            className="w-[300px] h-[200px]"
+          />
+        ))}
         <span className="break-words ">{content}</span>
       </div>
       <div className="flex gap-[0.5rem] justify-center">

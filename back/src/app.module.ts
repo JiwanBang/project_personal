@@ -10,6 +10,7 @@ import { CommentModule } from './comment/comment.module';
 import { CategoryModule } from './category/category.module';
 import { AwsModule } from './aws/aws.module';
 import { UtilsModule } from './utils/utils.module';
+import { PicturesModule } from './pictures/pictures.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -23,6 +24,7 @@ import { UtilsModule } from './utils/utils.module';
     CommentModule,
     AwsModule,
     UtilsModule,
+    PicturesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

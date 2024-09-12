@@ -10,6 +10,7 @@ import { User } from '../user/user.entity';
 import { Request } from 'express';
 import { UtilsService } from '../utils/utils.service';
 import { AwsService } from '../aws/aws.service';
+import { Pictures } from '../pictures/pictues.entity';
 
 @Injectable()
 export class BoardService {
@@ -18,6 +19,8 @@ export class BoardService {
     private boardRepository: Repository<Board>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    @InjectRepository(Pictures)
+    private pictureRepository: Repository<Pictures>,
     private utilsService: UtilsService,
     private awsService: AwsService,
   ) {}
@@ -26,6 +29,7 @@ export class BoardService {
     try {
       const userId = req.session.user;
       if (userId) {
+        console.log('userId는?' + userId);
         const writer = await this.userRepository.findOne({
           where: { id: userId },
         });
@@ -38,7 +42,7 @@ export class BoardService {
             writer: writer,
           });
           const newPost = await this.boardRepository.save(write);
-          console.log(newPost);
+          console.log('save 한 값 ' + newPost);
           return { newPost, message: 'upload complete', status: 210 };
         }
       } else if (!userId) {
@@ -81,7 +85,7 @@ export class BoardService {
 
   async findOne(id: number) {
     const findOne = await this.boardRepository.find({
-      relations: ['writer', 'boardCate'],
+      relations: ['writer', 'boardCate', 'post'],
       where: { id: id },
     });
     if (!findOne) throw new UnauthorizedException('fail find post');
@@ -109,14 +113,18 @@ export class BoardService {
     }
   }
 
-  async saveImage(files: Express.Multer.File[]) {
+  async saveImage(files: Express.Multer.File[], postId: number) {
     console.log('saveImage 진행중');
     console.log('FormData:' + files);
-    const upload = Promise.all(files.map((file) => this.imageUpload(file)));
+    const upload = Promise.all(
+      files.map((file) => this.imageUpload(file, postId)),
+    );
+
+    console.log(upload);
     return upload;
   }
 
-  async imageUpload(file: Express.Multer.File) {
+  async imageUpload(file: Express.Multer.File, postId: number) {
     console.log('imageUpload 진행중');
     const imageName = this.utilsService.getUUID();
     const ext = file.originalname.split('.').pop();
@@ -126,7 +134,16 @@ export class BoardService {
       file,
       ext,
     );
+    const post = await this.boardRepository.findOne({ where: { id: postId } });
+    const saveUrl = await this.pictureRepository.save({
+      img_url: imgUrl,
+      post: post,
+    });
 
-    return { imgUrl };
+    console.log('이미지업로드 종료.');
+    console.log(imgUrl);
+    console.log(saveUrl);
+
+    return { saveUrl };
   }
 }

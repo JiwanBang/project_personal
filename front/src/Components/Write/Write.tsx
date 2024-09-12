@@ -1,7 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import instance from "../../lib/axios";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
 export interface ICate {
   id: number;
@@ -62,32 +61,39 @@ const Write = () => {
     } else if (!cateValue) {
       alert("카테고리를 작성해주십시오");
     } else {
-      // const submit = async () => {
-      //   const post = await instance.post(
-      //     "/board",
-      //     { title: title, content: content, boardCate: cateValue },
-      //     {
-      //       withCredentials: true,
-      //     }
-      //   );
-      //   const imgUpload = await instance.post("/board/upload", uploadImg, {
-      //     headers: { "content-type": "multipart/form-data" },
-      //     withCredentials: true,
-      //   });
-
-      //   console.log(post);
-      //   console.log(imgUpload);
-      // };
-      // submit();
       try {
-        if (uploadImg) {
-          console.log(uploadImg);
-
-          await instance.post("/board/upload", uploadImg, {
-            headers: { "content-type": "multipart/form-data" },
-            withCredentials: true,
-          });
-        }
+        const submit = async () => {
+          const post = await instance.post(
+            "/board",
+            { title: title, content: content, boardCate: cateValue },
+            {
+              withCredentials: true,
+            }
+          );
+          console.log(post);
+          if (post.status === 201) {
+            if (uploadImg) {
+              uploadImg.append("postId", post.data.newPost.id);
+              const imgUpload = await instance.post(
+                "/board/upload",
+                uploadImg,
+                {
+                  headers: { "content-type": "multipart/form-data" },
+                  withCredentials: true,
+                }
+              );
+              console.log(imgUpload);
+            }
+          }
+        };
+        submit();
+        // if (uploadImg) {
+        //   console.log(uploadImg);
+        //   await instance.post("/board/upload", uploadImg, {
+        //     headers: { "content-type": "multipart/form-data" },
+        //     withCredentials: true,
+        //   });
+        // }
       } catch (err) {
         console.error(err);
       }

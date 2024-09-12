@@ -31,6 +31,7 @@ const Posts = () => {
       {post.map((item) => (
         <PostElems
           key={item.id}
+          post={item.post}
           id={item.id}
           title={item.title}
           category={item.boardCate.category}

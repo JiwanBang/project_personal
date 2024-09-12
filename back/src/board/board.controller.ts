@@ -8,13 +8,12 @@ import {
   Delete,
   Req,
   UseInterceptors,
-  UploadedFile,
   UploadedFiles,
 } from '@nestjs/common';
 import { BoardService } from './board.service';
 import { Board } from './entities/board.entity';
 import { Request } from 'express';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('board')
 export class BoardController {
@@ -59,7 +58,10 @@ export class BoardController {
 
   @Post('upload')
   @UseInterceptors(FilesInterceptor('files'))
-  async saveImage(@UploadedFiles() files: Express.Multer.File[]) {
-    return await this.boardService.saveImage(files);
+  async saveImage(
+    @UploadedFiles() files: Express.Multer.File[],
+    @Body('postId') postId: number,
+  ) {
+    return await this.boardService.saveImage(files, postId);
   }
 }
