@@ -247,7 +247,6 @@ jobs:
           rsync -avz -e "ssh" ./back/dist/ ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/var/www/backend
           rsync -avz -e "ssh" ./back/package.json ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/var/www/backend/package.json
           rsync -avz -e "ssh" ./back/tsconfig.json ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/var/www/backend/tsconfig.json
-          rsync -avz -e "ssh" ./back/.env ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/var/www/backend/.env
           ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
             export NVM_DIR="$HOME/.nvm"
             if [ -s "$NVM_DIR/nvm.sh" ]; then
@@ -260,12 +259,15 @@ jobs:
             nvm use --lts
             cd /var/www/backend
             npm i --production
-            echo "PORT=${{ secrets.DATABASE_PORT }}" > .env
-            echo "">> .env
-            echo "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" >> .env
-            echo "DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}" >> .env
-            echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> .env
-            echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> .env'
+            echo DATABASE_HOST=${{ secrets.DATABASE_HOST }} > .env
+            echo DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }} >> .env
+            echo DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} >> .env
+            echo DATABASE_NAME=${{ secrets.DATABASE_NAME }} >> .env
+            echo DATABASE_PORT=${{ secrets.DATABASE_PORT }} >> .env
+            echo AWS_REGION=${{ secrets.AWS_REGION }} >> .env
+            echo AWS_S3_ACCESS_KEY=${{ secrets.AWS_S3_ACCESS_KEY }} >> .env
+            echo AWS_S3_SECRET_ACCESS_KEY=${{ secrets.AWS_S3_SECRET_ACCESS_KEY }} >> .env
+            echo AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }} >> .env
 
       - name: Start Server
         run: |
