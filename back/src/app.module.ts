@@ -13,7 +13,10 @@ import { UtilsModule } from './utils/utils.module';
 import { PicturesModule } from './pictures/pictures.module';
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '/var/www/backend/.env',
+    }),
     TypeOrmModule.forRootAsync({
       // forRoot -> forRootAsync로 변경
       useClass: TypeOrmConfigService,
