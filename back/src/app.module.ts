@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { BoardModule } from './board/board.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './config/typeorm.config.service';
 import { CommentModule } from './comment/comment.module';
@@ -30,6 +30,17 @@ import { PicturesModule } from './pictures/pictures.module';
     PicturesModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: 'TEST_ENV',
+      useFactory: (configService: ConfigService) => {
+        const envValue = configService.get('DATABASE_HOST');
+        console.log('DATABASE_HOST:', envValue); // 여기서 로그 확인
+        return envValue;
+      },
+      inject: [ConfigService],
+    },
+  ],
 })
 export class AppModule {}
