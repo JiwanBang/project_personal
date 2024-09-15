@@ -15,7 +15,7 @@ import { PicturesModule } from './pictures/pictures.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: `${__dirname}/.env`,
+      envFilePath: '/var/www/backend/.env',
     }),
     TypeOrmModule.forRootAsync({
       // forRoot -> forRootAsync로 변경
