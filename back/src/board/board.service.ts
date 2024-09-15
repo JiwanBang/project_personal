@@ -33,6 +33,7 @@ export class BoardService {
         const writer = await this.userRepository.findOne({
           where: { id: userId },
         });
+        console.log('작성자 정보를 알려주마' + writer);
 
         if (!writer) {
           throw new HttpException('작성자를 확인할 수 없습니다', 299);
@@ -49,7 +50,7 @@ export class BoardService {
         throw new HttpException('로그인이 필요합니다', 214);
       }
     } catch (error) {
-      throw new UnauthorizedException('posting failed');
+      throw new HttpException('posting failed', 215);
     }
   }
 
