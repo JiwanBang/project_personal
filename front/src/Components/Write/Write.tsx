@@ -9,7 +9,7 @@ export interface ICate {
 
 const Write = () => {
   const [categories, setCategories] = useState<ICate[]>([]);
-  const [cateValue, setCateValue] = useState<number>(71);
+  const [cateValue, setCateValue] = useState<number>();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [uploadImg, setUploadImg] = useState<FormData>();
