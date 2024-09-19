@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import instance from "../../../lib/axios";
+import { Link } from "react-router-dom";
 
 export interface Iprops {
   id: number;
@@ -21,14 +22,15 @@ const Img = () => {
     <div>
       {Img.map((item) => (
         <li className="flex gap-[0.8rem] px-1 py-[0.1rem]">
-          <img
-            src={item.img_url}
-            className="w-[5rem] h-[5rem] rounded-[0.7rem]"
-          />
-          <div>
-            <div>{item.post.title}</div>
-            <div>{item.post.createdAt}</div>
+          <div className="w-[6rem] h-[5rem] rounded-[0.7rem] overflow-hidden">
+            <img src={item.img_url} />
           </div>
+          <Link to={`/post/${item.post}`}>
+            <div>
+              <div>{item.post.title}</div>
+              <div>{item.post.createdAt}</div>
+            </div>
+          </Link>
         </li>
       ))}
     </div>

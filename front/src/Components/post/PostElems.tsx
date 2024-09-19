@@ -50,16 +50,10 @@ const PostElems = ({
           <img
             key={item.id}
             src={item.img_url}
-            className="w-[300px] h-[200px]"
+            // className="w-[300px] h-[200px]"
           />
         ))}
         <span className="break-words ">{content}</span>
-      </div>
-      <div className="flex gap-[0.5rem] justify-center">
-        <textarea className="w-[15rem] h-[3rem] rounded-[0.3rem] border-[0.01rem] p-[0.5rem] text-[0.6rem]" />
-        <button className="w-[2rem] border-[0.1rem] text-[0.5rem] font-bold rounded-[0.3rem]">
-          등록
-        </button>
       </div>
       <div>
         <CommentElem></CommentElem>

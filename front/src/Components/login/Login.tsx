@@ -3,11 +3,27 @@ import { Link, useNavigate } from "react-router-dom";
 import instance from "../../lib/axios";
 import { useRecoilState } from "recoil";
 import { userState } from "../../hooks/useContextLogin";
+import Modal from "react-modal";
+
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    padding: 10,
+  },
+};
 
 const Login = () => {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [logined, setLogined] = useRecoilState(userState);
+
+  const [idInput, setIdInput] = useState(false);
+  const [passwordInput, setPasswordInput] = useState(false);
 
   const navigate = useNavigate();
 
@@ -35,6 +51,13 @@ const Login = () => {
 
   return (
     <div className="flex justify-center w-[20rem]">
+      <Modal style={customStyles} isOpen={idInput}>
+        아이디를 입력해주세요
+      </Modal>
+      <Modal style={customStyles} isOpen={passwordInput}>
+        패스워드를 입력해주세요
+      </Modal>
+
       <div className="absolute bottom-[40%]">
         <div className="py-2">
           <input
