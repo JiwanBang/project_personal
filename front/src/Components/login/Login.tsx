@@ -29,9 +29,9 @@ const Login = () => {
 
   const onSubmit = async () => {
     if (userId === "") {
-      alert("아이디를 입력해주십시오");
+      setIdInput(true);
     } else if (password === "") {
-      alert("패스워드를 입력해주십시오");
+      setPasswordInput(true);
     } else {
       const login = await instance.post(
         "/user",

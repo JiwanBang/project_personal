@@ -10,17 +10,19 @@ import Complete from "./Components/Regist/Complete";
 import Write from "./Components/Write/Write";
 function App() {
   return (
-    <div className="App w-sm h-[550px]">
-      <Header></Header>
-      <Routes>
-        <Route path="/" Component={Main}></Route>
-        <Route path="/post/:postID" element={<Posts />} />
-        <Route path="/list/:listID" element={<List />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/regist" element={<Regist />} />
-        <Route path="/regist/done" element={<Complete />} />
-        <Route path="/write" element={<Write />} />
-      </Routes>
+    <div className="w-full h-full flex items-center justify-center">
+      <div className="App w-sm h-[550px]">
+        <Header></Header>
+        <Routes>
+          <Route path="/" Component={Main}></Route>
+          <Route path="/post/:postID" element={<Posts />} />
+          <Route path="/list/:listID" element={<List />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/regist" element={<Regist />} />
+          <Route path="/regist/done" element={<Complete />} />
+          <Route path="/write" element={<Write />} />
+        </Routes>
+      </div>
     </div>
   );
 }

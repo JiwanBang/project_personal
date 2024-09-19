@@ -25,7 +25,7 @@ const Img = () => {
           <div className="w-[6rem] h-[5rem] rounded-[0.7rem] overflow-hidden">
             <img src={item.img_url} />
           </div>
-          <Link to={`/post/${item.post}`}>
+          <Link to={`/post/${item.post.id}`}>
             <div>
               <div>{item.post.title}</div>
               <div>{item.post.createdAt}</div>
