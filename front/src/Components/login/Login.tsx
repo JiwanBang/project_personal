@@ -51,10 +51,22 @@ const Login = () => {
 
   return (
     <div className="flex justify-center w-[20rem]">
-      <Modal style={customStyles} isOpen={idInput}>
+      <Modal
+        style={customStyles}
+        isOpen={idInput}
+        onRequestClose={() => {
+          setIdInput(false);
+        }}
+      >
         아이디를 입력해주세요
       </Modal>
-      <Modal style={customStyles} isOpen={passwordInput}>
+      <Modal
+        style={customStyles}
+        isOpen={passwordInput}
+        onRequestClose={() => {
+          setPasswordInput(false);
+        }}
+      >
         패스워드를 입력해주세요
       </Modal>
 

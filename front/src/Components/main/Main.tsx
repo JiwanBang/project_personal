@@ -40,7 +40,13 @@ const Main = () => {
   return (
     <div>
       <div className="w-full border-b-[0.2rem] border-[#abc4d5] pb-1">
-        <Modal isOpen={modal} style={customStyles}>
+        <Modal
+          isOpen={modal}
+          style={customStyles}
+          onRequestClose={() => {
+            setModal(false);
+          }}
+        >
           해당 사이트는 320x550 해상도 기준으로 만들어진 사이트입니다.
         </Modal>
         <ul className="flex-col items-start justify-start text-start ">
