@@ -9,7 +9,7 @@ export interface ICate {
 
 const Write = () => {
   const [categories, setCategories] = useState<ICate[]>([]);
-  const [cateValue, setCateValue] = useState<number>();
+  const [cateValue, setCateValue] = useState<number>(1);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [uploadImg, setUploadImg] = useState<FormData>();
@@ -84,6 +84,11 @@ const Write = () => {
                 }
               );
               console.log(imgUpload);
+              if (imgUpload.status == 201) {
+                nav("/");
+              } else {
+                alert("작성이 정상적으로 완료되지 않았습니다.");
+              }
             }
           }
         };
